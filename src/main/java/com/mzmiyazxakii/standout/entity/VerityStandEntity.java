@@ -12,7 +12,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import org.joml.Vector3f;
 import net.minecraft.nbt.CompoundTag;
 import java.util.UUID;
@@ -50,8 +49,7 @@ public class VerityStandEntity extends Mob {
    if(level() instanceof ServerLevel server&&level().getGameTime()<=auraUntil)server.sendParticles(new DustParticleOptions(new Vector3f(1.0F,0.91F,0.38F),0.75F),owner.getX(),owner.getY()+0.9D,owner.getZ(),5,0.38D,0.65D,0.38D,0.005D);
    if(isAttacking()&&!isSecondAttacking()&&level() instanceof ServerLevel server){
     Vec3 aim=owner.getLookAngle().normalize();Vec3 front=position().add(aim.scale(0.48D)).add(0.0D,0.35D,0.0D);
-    server.sendParticles(ParticleTypes.CLOUD,front.x,front.y,front.z,4,0.10D,0.08D,0.10D,0.015D);
-    server.sendParticles(ParticleTypes.GUST,front.x,front.y,front.z,1,0.06D,0.06D,0.06D,0.01D);
+    server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,front.x,front.y,front.z,5,0.10D,0.08D,0.10D,0.015D);
    }
    if(isSecondAttacking()&&secondTearsFired<4&&attackTicks<=nextSecondTearTick){
     Vec3 look=owner.getLookAngle().normalize();Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.62D));
