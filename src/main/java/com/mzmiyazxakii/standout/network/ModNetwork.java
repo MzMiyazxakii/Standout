@@ -9,5 +9,6 @@ public class ModNetwork {
  public static void register(){
   CHANNEL.messageBuilder(SummonStandPacket.class,0).encoder((msg,buf)->{}).decoder(buf->new SummonStandPacket()).consumerMainThread(SummonStandPacket::handle).add();
   CHANNEL.messageBuilder(AbilityPacket.class,1).encoder((msg,buf)->{}).decoder(buf->new AbilityPacket()).consumerMainThread(AbilityPacket::handle).add();
+  CHANNEL.messageBuilder(AbilityTwoPacket.class,2).encoder((msg,buf)->{}).decoder(buf->new AbilityTwoPacket()).consumerMainThread(AbilityTwoPacket::handle).add();
  }
 }
