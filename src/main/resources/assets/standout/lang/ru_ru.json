@@ -1,6 +1,10 @@
 {
  "item.standout.mysterious_arrow":"Загадочная Стрела",
+ "item.standout.rokaka":"Фрукт Рокака",
  "key.standout.summon":"Призвать / Скрыть стенд",
+ "key.standout.verity_ability":"Верити: Притяжение",
  "key.categories.standout":"StandOut",
- "message.standout.verity_obtained":"Вы получили Верити!"
+ "message.standout.verity_obtained":"Вы получили Верити!",
+ "message.standout.rokaka_used":"Стенд удалён.",
+ "message.standout.no_stand":"У вас нет стенда."
 }
