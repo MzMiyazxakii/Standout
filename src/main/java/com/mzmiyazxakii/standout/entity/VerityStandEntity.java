@@ -32,8 +32,8 @@ public class VerityStandEntity extends Mob {
  public boolean isAttacking(){return entityData.get(ATTACKING);} public boolean isSecondAttacking(){return entityData.get(ATTACKING_TWO);}
  public boolean isActTwo(){return entityData.get(ACT_TWO);}
  public void setActTwo(){if(!level().isClientSide)entityData.set(ACT_TWO,true);}
- public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
- public void startAttackTwo(){if(!level().isClientSide){attackTicks=52;secondTearsFired=0;nextSecondTearTick=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
+ public void startAttack(){if(!level().isClientSide){attackTicks=isActTwo()?25:30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
+ public void startAttackTwo(){if(!level().isClientSide){attackTicks=isActTwo()?20:52;secondTearsFired=0;nextSecondTearTick=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
  @Override public void tick(){
   super.tick();
   if(level().isClientSide){
@@ -54,7 +54,7 @@ public class VerityStandEntity extends Mob {
     Vec3 aim=owner.getLookAngle().normalize();Vec3 front=position().add(aim.scale(0.48D)).add(0.0D,0.35D,0.0D);
     server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,front.x,front.y,front.z,5,0.10D,0.08D,0.10D,0.015D);
    }
-   if(isSecondAttacking()&&secondTearsFired<4&&attackTicks<=nextSecondTearTick){
+   if(!isActTwo()&&isSecondAttacking()&&secondTearsFired<4&&attackTicks<=nextSecondTearTick){
     Vec3 look=owner.getLookAngle().normalize();Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.62D));
     TearProjectile tear=new TearProjectile(level(),owner);tear.setPos(origin.x,origin.y,origin.z);tear.shoot(look.x,look.y,look.z,1.8F,0.0F);tear.setDeltaMovement(look.scale(1.8D));tear.setNoGravity(true);level().addFreshEntity(tear);
     secondTearsFired++;nextSecondTearTick-=5;
