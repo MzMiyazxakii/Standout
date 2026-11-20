@@ -1,6 +1,5 @@
 package com.mzmiyazxakii.standout.entity;
 import net.minecraft.world.entity.EntityType;
-import com.mzmiyazxakii.standout.entity.TearProjectile;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -47,27 +46,32 @@ public class VerityStandEntity extends Mob {
     if(attackAnimationState.isStarted()){attackAnimationState.stop();if(tickCount>=7)idleAnimationState.start(tickCount);}
     if(animationInitialized&&tickCount>=7&&!idleAnimationState.isStarted()){summonAnimationState.stop();idleAnimationState.start(tickCount);}
    }
+  }
+  if(!level().isClientSide&&isAttacking()&&--attackTicks<=0){entityData.set(ATTACKING,false);entityData.set(ATTACKING_TWO,false);}
+  UUID id=getOwnerId();
+  if(id==null){if(!level().isClientSide)discard();return;}
+  Player owner=level().getPlayerByUUID(id);
+  if(owner==null||!owner.isAlive()){if(!level().isClientSide)discard();return;}
+  // Reposition on both logical sides every tick: client prediction prevents sprinting owners
+  // from visually outrunning the stand while server position packets catch up.
+  if(isSecondAttacking()){
+   Vec3 forward=owner.getLookAngle().normalize();
+   setPos(owner.getX()+forward.x*1.35D,owner.getY()+0.55D,owner.getZ()+forward.z*1.35D);
   }else{
-   if(isAttacking()&&--attackTicks<=0){entityData.set(ATTACKING,false);entityData.set(ATTACKING_TWO,false);}
-   if(ownerId==null){discard();return;}
-   Player owner=level().getPlayerByUUID(ownerId);
-   if(owner==null||!owner.isAlive()){discard();return;}
+   float yaw=owner.getYRot()*((float)Math.PI/180F);
+   double x=owner.getX()+Math.cos(yaw)*0.42D+Math.sin(yaw)*0.28D;
+   double z=owner.getZ()+Math.sin(yaw)*0.42D-Math.cos(yaw)*0.28D;
+   setPos(x,owner.getY()+1.15D,z);
+  }
+  setYRot(owner.getYRot());yRotO=getYRot();
+  setYHeadRot(owner.getYHeadRot());yHeadRotO=getYHeadRot();
+  setXRot(owner.getXRot());xRotO=getXRot();
+  setDeltaMovement(Vec3.ZERO);
+  if(!level().isClientSide){
    long auraUntil=owner.getPersistentData().getLong("standout_verity_aura_until");
    if(level() instanceof ServerLevel server&&level().getGameTime()<=auraUntil){
     server.sendParticles(new DustParticleOptions(new Vector3f(1.0F,0.91F,0.38F),0.75F),owner.getX(),owner.getY()+0.9D,owner.getZ(),5,0.38D,0.65D,0.38D,0.005D);
    }
-   if(isSecondAttacking()){
-    Vec3 forward=owner.getLookAngle().normalize();
-    setPos(owner.getX()+forward.x*1.05D,owner.getY()+0.45D,owner.getZ()+forward.z*1.05D);
-   }else{
-    float yaw=owner.getYRot()*((float)Math.PI/180F);
-    double x=owner.getX()+Math.cos(yaw)*0.42D+Math.sin(yaw)*0.28D;
-    double z=owner.getZ()+Math.sin(yaw)*0.42D-Math.cos(yaw)*0.28D;
-    setPos(x,owner.getY()+1.15D,z);
-   }
-   setYRot(owner.getYRot());yRotO=getYRot();
-   setYHeadRot(owner.getYHeadRot());yHeadRotO=getYHeadRot();
-   setXRot(owner.getXRot());xRotO=getXRot();
    if(isSecondAttacking()&&!secondVolleyFired&&attackTicks<=42){
     secondVolleyFired=true;
     Vec3 look=owner.getLookAngle().normalize();
@@ -84,7 +88,6 @@ public class VerityStandEntity extends Mob {
      level().addFreshEntity(tear);
     }
    }
-   setDeltaMovement(Vec3.ZERO);
   }
  }
  @Override protected void registerGoals(){}
