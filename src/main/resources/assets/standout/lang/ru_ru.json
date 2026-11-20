@@ -10,10 +10,5 @@
  "message.standout.rokaka_used":"Стенд удалён.",
  "message.standout.no_stand":"У вас нет стенда.",
  "gui.standout.tablet.title":"Планшет администратора",
- "gui.standout.tablet.target":"Ник игрока",
- "gui.standout.tablet.give":"Выдать Верити",
- "gui.standout.tablet.arrow":"Выдать стрелу",
- "gui.standout.tablet.reset":"Сбросить откаты",
- "gui.standout.tablet.remove":"Убрать стенд",
  "gui.standout.tablet.denied":"Планшет доступен только операторам сервера."
 }
