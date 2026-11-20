@@ -63,7 +63,10 @@ public class VerityStandEntity extends Mob {
     double z=owner.getZ()+Math.sin(yaw)*0.42D-Math.cos(yaw)*0.28D;
     setPos(x,owner.getY()+1.15D,z);
    }
-   setYRot(owner.getYRot());yRotO=getYRot();setDeltaMovement(Vec3.ZERO);
+   setYRot(owner.getYRot());yRotO=getYRot();
+   setYHeadRot(owner.getYHeadRot());yHeadRotO=getYHeadRot();
+   setXRot(owner.getXRot());xRotO=getXRot();
+   setDeltaMovement(Vec3.ZERO);
   }
  }
  @Override protected void registerGoals(){}
