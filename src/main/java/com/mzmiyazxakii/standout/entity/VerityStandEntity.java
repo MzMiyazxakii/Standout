@@ -1,5 +1,6 @@
 package com.mzmiyazxakii.standout.entity;
 import net.minecraft.world.entity.EntityType;
+import com.mzmiyazxakii.standout.entity.TearProjectile;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,6 +27,7 @@ public class VerityStandEntity extends Mob {
  public final AnimationState idleAnimationState=new AnimationState();
  public final AnimationState attackAnimationState=new AnimationState();
  private boolean animationInitialized;
+ private boolean secondVolleyFired;
  public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);}
  public static AttributeSupplier.Builder createAttributes(){return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,20.0D);}
  @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);entityData.define(OWNER_ID,Optional.empty());}
@@ -34,7 +36,7 @@ public class VerityStandEntity extends Mob {
  public boolean isAttacking(){return entityData.get(ATTACKING);}
  public boolean isSecondAttacking(){return entityData.get(ATTACKING_TWO);}
  public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
- public void startAttackTwo(){if(!level().isClientSide){attackTicks=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
+ public void startAttackTwo(){if(!level().isClientSide){attackTicks=52;secondVolleyFired=false;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
  @Override public void tick(){
   super.tick();
   if(level().isClientSide){
@@ -66,6 +68,22 @@ public class VerityStandEntity extends Mob {
    setYRot(owner.getYRot());yRotO=getYRot();
    setYHeadRot(owner.getYHeadRot());yHeadRotO=getYHeadRot();
    setXRot(owner.getXRot());xRotO=getXRot();
+   if(isSecondAttacking()&&!secondVolleyFired&&attackTicks<=42){
+    secondVolleyFired=true;
+    Vec3 look=owner.getLookAngle().normalize();
+    Vec3 right=new Vec3(-look.z,0.0D,look.x).normalize();
+    Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.55D));
+    double[] lanes={-0.27D,-0.09D,0.09D,0.27D};
+    double[] spreads={-0.20D,-0.07D,0.07D,0.20D};
+    for(int i=0;i<4;i++){
+     Vec3 spawn=origin.add(right.scale(lanes[i]));
+     Vec3 direction=look.add(right.scale(spreads[i])).normalize();
+     TearProjectile tear=new TearProjectile(level(),owner);
+     tear.setPos(spawn.x,spawn.y,spawn.z);
+     tear.shoot(direction.x,direction.y,direction.z,0.62F,0.0F);
+     level().addFreshEntity(tear);
+    }
+   }
    setDeltaMovement(Vec3.ZERO);
   }
  }
