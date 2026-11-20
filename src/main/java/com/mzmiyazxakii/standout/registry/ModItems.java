@@ -10,4 +10,5 @@ public class ModItems {
  public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(ForgeRegistries.ITEMS,StandoutMod.MOD_ID);
  public static final RegistryObject<Item> MYSTERIOUS_ARROW=ITEMS.register("mysterious_arrow",()->new MysteriousArrowItem(new Item.Properties().stacksTo(16)));
  public static final RegistryObject<Item> ROKAKA=ITEMS.register("rokaka",()->new RokakaItem(new Item.Properties().stacksTo(16)));
+ public static final RegistryObject<Item> TEAR=ITEMS.register("tear",()->new Item(new Item.Properties()));
 }
