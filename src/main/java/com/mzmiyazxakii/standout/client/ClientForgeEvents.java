@@ -26,6 +26,7 @@ public class ClientForgeEvents {
  @Mod.EventBusSubscriber(modid="standout",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.FORGE)
  public static class ClientTicks {
   private static long abilityOneReadyAt=0L,abilityTwoReadyAt=0L;
+  public static void resetCooldowns(){abilityOneReadyAt=0L;abilityTwoReadyAt=0L;}
   @SubscribeEvent public static void onClientTick(TickEvent.ClientTickEvent event){
    if(event.phase!=TickEvent.Phase.END)return;
    Minecraft mc=Minecraft.getInstance();
