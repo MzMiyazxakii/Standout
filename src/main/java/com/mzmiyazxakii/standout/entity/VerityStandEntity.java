@@ -63,6 +63,6 @@ public class VerityStandEntity extends Mob {
  }
  @Override protected void registerGoals(){}
  @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);if(ownerId!=null)tag.putUUID("Owner",ownerId);tag.putBoolean("ActTwo",isActTwo());}
- @Override public void readAdditionalSaveData(CompoundTag tag){super.readAdditionalSaveData(tag);if(tag.hasUUID("Owner")){ownerId=tag.getUUID("Owner");entityData.set(OWNER_ID,Optional.of(ownerId));}entityData.set(ACT_TWO,tag.getBoolean("ActTwo"));}}
+ @Override public void readAdditionalSaveData(CompoundTag tag){super.readAdditionalSaveData(tag);if(tag.hasUUID("Owner")){ownerId=tag.getUUID("Owner");entityData.set(OWNER_ID,Optional.of(ownerId));}entityData.set(ACT_TWO,tag.getBoolean("ActTwo"));}
  @Override public boolean isPushable(){return false;} @Override public boolean hurt(net.minecraft.world.damagesource.DamageSource source,float amount){return false;}
 }
