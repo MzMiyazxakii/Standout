@@ -26,7 +26,8 @@ public class VerityStandEntity extends Mob {
  public final AnimationState idleAnimationState=new AnimationState();
  public final AnimationState attackAnimationState=new AnimationState();
  private boolean animationInitialized;
- private boolean secondVolleyFired;
+ private int secondTearsFired;
+ private int nextSecondTearTick;
  public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);}
  public static AttributeSupplier.Builder createAttributes(){return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,20.0D);}
  @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);entityData.define(OWNER_ID,Optional.empty());}
@@ -35,7 +36,7 @@ public class VerityStandEntity extends Mob {
  public boolean isAttacking(){return entityData.get(ATTACKING);}
  public boolean isSecondAttacking(){return entityData.get(ATTACKING_TWO);}
  public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
- public void startAttackTwo(){if(!level().isClientSide){attackTicks=52;secondVolleyFired=false;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
+ public void startAttackTwo(){if(!level().isClientSide){attackTicks=52;secondTearsFired=0;nextSecondTearTick=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
  @Override public void tick(){
   super.tick();
   if(level().isClientSide){
@@ -72,21 +73,16 @@ public class VerityStandEntity extends Mob {
    if(level() instanceof ServerLevel server&&level().getGameTime()<=auraUntil){
     server.sendParticles(new DustParticleOptions(new Vector3f(1.0F,0.91F,0.38F),0.75F),owner.getX(),owner.getY()+0.9D,owner.getZ(),5,0.38D,0.65D,0.38D,0.005D);
    }
-   if(isSecondAttacking()&&!secondVolleyFired&&attackTicks<=42){
-    secondVolleyFired=true;
+   if(isSecondAttacking()&&secondTearsFired<4&&attackTicks<=nextSecondTearTick){
+    // Fire four tears in sequence, all along the owner's current aim direction.
     Vec3 look=owner.getLookAngle().normalize();
-    Vec3 right=new Vec3(-look.z,0.0D,look.x).normalize();
-    Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.55D));
-    double[] lanes={-0.27D,-0.09D,0.09D,0.27D};
-    double[] spreads={-0.20D,-0.07D,0.07D,0.20D};
-    for(int i=0;i<4;i++){
-     Vec3 spawn=origin.add(right.scale(lanes[i]));
-     Vec3 direction=look.add(right.scale(spreads[i])).normalize();
-     TearProjectile tear=new TearProjectile(level(),owner);
-     tear.setPos(spawn.x,spawn.y,spawn.z);
-     tear.shoot(direction.x,direction.y,direction.z,0.62F,0.0F);
-     level().addFreshEntity(tear);
-    }
+    Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.62D));
+    TearProjectile tear=new TearProjectile(level(),owner);
+    tear.setPos(origin.x,origin.y,origin.z);
+    tear.shoot(look.x,look.y,look.z,0.62F,0.0F);
+    level().addFreshEntity(tear);
+    secondTearsFired++;
+    nextSecondTearTick-=5;
    }
   }
  }
