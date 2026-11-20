@@ -23,7 +23,7 @@ public class SummonStandPacket {
      player.level().addFreshEntity(stand);
      player.getPersistentData().putLong("standout_verity_aura_until",player.level().getGameTime()+35L);
      // Broadcast a normal level sound packet to nearby clients, including the summoning player.
-     player.level().playSound(null,stand.getX(),stand.getY(),stand.getZ(),ModSounds.VERITY_SUMMON.get(),SoundSource.PLAYERS,2.0F,1.0F);
+     player.playNotifySound(ModSounds.VERITY_SUMMON.get(),SoundSource.PLAYERS,2.0F,1.0F);
     }
    }
   });
