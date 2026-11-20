@@ -1,5 +1,6 @@
 package com.mzmiyazxakii.standout.item;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -47,6 +48,11 @@ public class MysteriousArrowItem extends Item {
   if(entity instanceof Player player){
    if(!level.isClientSide){
     player.getPersistentData().putBoolean("standout_has_verity",true);
+    player.displayClientMessage(Component.translatable("message.standout.verity_obtained"),true);
+    if(level instanceof ServerLevel server){
+     server.sendParticles(ParticleTypes.END_ROD,player.getX(),player.getY()+1.0D,player.getZ(),55,0.8D,1.0D,0.8D,0.12D);
+     server.sendParticles(ParticleTypes.PORTAL,player.getX(),player.getY()+1.0D,player.getZ(),90,0.9D,1.1D,0.9D,0.35D);
+    }
     if(!player.getAbilities().instabuild){
      stack.shrink(1);
      ItemStack stick=new ItemStack(Items.STICK,1);
