@@ -10,5 +10,6 @@ public class ModNetwork {
   CHANNEL.messageBuilder(SummonStandPacket.class,0).encoder((msg,buf)->{}).decoder(buf->new SummonStandPacket()).consumerMainThread(SummonStandPacket::handle).add();
   CHANNEL.messageBuilder(AbilityPacket.class,1).encoder((msg,buf)->{}).decoder(buf->new AbilityPacket()).consumerMainThread(AbilityPacket::handle).add();
   CHANNEL.messageBuilder(AbilityTwoPacket.class,2).encoder((msg,buf)->{}).decoder(buf->new AbilityTwoPacket()).consumerMainThread(AbilityTwoPacket::handle).add();
+  CHANNEL.messageBuilder(AdminTabletActionPacket.class,3).encoder((msg,buf)->{buf.writeUtf(msg.action);buf.writeUtf(msg.target);}).decoder(buf->new AdminTabletActionPacket(buf.readUtf(32),buf.readUtf(64))).consumerMainThread(AdminTabletActionPacket::handle).add();
  }
 }
