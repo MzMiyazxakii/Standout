@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import java.util.UUID;
 public class VerityStandEntity extends Mob {
  private static final EntityDataAccessor<Boolean> ATTACKING=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.BOOLEAN);
+ private static final EntityDataAccessor<Boolean> ATTACKING_TWO=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.BOOLEAN);
  private UUID ownerId;
  private int attackTicks;
  public final AnimationState summonAnimationState=new AnimationState();
@@ -25,11 +26,13 @@ public class VerityStandEntity extends Mob {
  private boolean animationInitialized;
  public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);}
  public static AttributeSupplier.Builder createAttributes(){return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,20.0D);}
- @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);}
+ @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);}
  public void setOwner(Player player){ownerId=player.getUUID();}
  public UUID getOwnerId(){return ownerId;}
  public boolean isAttacking(){return entityData.get(ATTACKING);}
- public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);}}
+ public boolean isSecondAttacking(){return entityData.get(ATTACKING_TWO);}
+ public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
+ public void startAttackTwo(){if(!level().isClientSide){attackTicks=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
  @Override public void tick(){
   super.tick();
   if(level().isClientSide){
@@ -41,7 +44,7 @@ public class VerityStandEntity extends Mob {
     if(animationInitialized&&tickCount>=7&&!idleAnimationState.isStarted()){summonAnimationState.stop();idleAnimationState.start(tickCount);}
    }
   }else{
-   if(isAttacking()&&--attackTicks<=0)entityData.set(ATTACKING,false);
+   if(isAttacking()&&--attackTicks<=0){entityData.set(ATTACKING,false);entityData.set(ATTACKING_TWO,false);}
    if(ownerId==null){discard();return;}
    Player owner=level().getPlayerByUUID(ownerId);
    if(owner==null||!owner.isAlive()){discard();return;}
@@ -49,10 +52,16 @@ public class VerityStandEntity extends Mob {
    if(level() instanceof ServerLevel server&&level().getGameTime()<=auraUntil){
     server.sendParticles(new DustParticleOptions(new Vector3f(1.0F,0.91F,0.38F),0.75F),owner.getX(),owner.getY()+0.9D,owner.getZ(),5,0.38D,0.65D,0.38D,0.005D);
    }
-   float yaw=owner.getYRot()*((float)Math.PI/180F);
-   double x=owner.getX()+Math.cos(yaw)*0.42D+Math.sin(yaw)*0.28D;
-   double z=owner.getZ()+Math.sin(yaw)*0.42D-Math.cos(yaw)*0.28D;
-   setPos(x,owner.getY()+1.15D,z);setYRot(owner.getYRot());yRotO=getYRot();setDeltaMovement(Vec3.ZERO);
+   if(isSecondAttacking()){
+    Vec3 forward=owner.getLookAngle().normalize();
+    setPos(owner.getX()+forward.x*1.05D,owner.getY()+0.45D,owner.getZ()+forward.z*1.05D);
+   }else{
+    float yaw=owner.getYRot()*((float)Math.PI/180F);
+    double x=owner.getX()+Math.cos(yaw)*0.42D+Math.sin(yaw)*0.28D;
+    double z=owner.getZ()+Math.sin(yaw)*0.42D-Math.cos(yaw)*0.28D;
+    setPos(x,owner.getY()+1.15D,z);
+   }
+   setYRot(owner.getYRot());yRotO=getYRot();setDeltaMovement(Vec3.ZERO);
   }
  }
  @Override protected void registerGoals(){}
