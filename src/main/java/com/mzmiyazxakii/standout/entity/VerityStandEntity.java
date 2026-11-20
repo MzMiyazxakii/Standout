@@ -19,16 +19,19 @@ import java.util.Optional;
 public class VerityStandEntity extends Mob {
  private static final EntityDataAccessor<Boolean> ATTACKING=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.BOOLEAN);
  private static final EntityDataAccessor<Boolean> ATTACKING_TWO=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.BOOLEAN);
+ private static final EntityDataAccessor<Boolean> ACT_TWO=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.BOOLEAN);
  private static final EntityDataAccessor<Optional<UUID>> OWNER_ID=SynchedEntityData.defineId(VerityStandEntity.class,EntityDataSerializers.OPTIONAL_UUID);
  private UUID ownerId; private int attackTicks;
  public final AnimationState summonAnimationState=new AnimationState(),idleAnimationState=new AnimationState(),attackAnimationState=new AnimationState();
  private boolean animationInitialized; private int secondTearsFired,nextSecondTearTick;
  public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);}
  public static AttributeSupplier.Builder createAttributes(){return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,20.0D);}
- @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);entityData.define(OWNER_ID,Optional.empty());}
+ @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);entityData.define(ACT_TWO,false);entityData.define(OWNER_ID,Optional.empty());}
  public void setOwner(Player player){ownerId=player.getUUID();entityData.set(OWNER_ID,Optional.of(ownerId));}
  public UUID getOwnerId(){return entityData.get(OWNER_ID).orElse(ownerId);}
  public boolean isAttacking(){return entityData.get(ATTACKING);} public boolean isSecondAttacking(){return entityData.get(ATTACKING_TWO);}
+ public boolean isActTwo(){return entityData.get(ACT_TWO);}
+ public void setActTwo(){if(!level().isClientSide)entityData.set(ACT_TWO,true);}
  public void startAttack(){if(!level().isClientSide){attackTicks=30;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,false);}}
  public void startAttackTwo(){if(!level().isClientSide){attackTicks=52;secondTearsFired=0;nextSecondTearTick=42;entityData.set(ATTACKING,true);entityData.set(ATTACKING_TWO,true);}}
  @Override public void tick(){
@@ -59,7 +62,7 @@ public class VerityStandEntity extends Mob {
   }
  }
  @Override protected void registerGoals(){}
- @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);if(ownerId!=null)tag.putUUID("Owner",ownerId);}
- @Override public void readAdditionalSaveData(CompoundTag tag){super.readAdditionalSaveData(tag);if(tag.hasUUID("Owner")){ownerId=tag.getUUID("Owner");entityData.set(OWNER_ID,Optional.of(ownerId));}}
+ @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);if(ownerId!=null)tag.putUUID("Owner",ownerId);tag.putBoolean("ActTwo",isActTwo());}
+ @Override public void readAdditionalSaveData(CompoundTag tag){super.readAdditionalSaveData(tag);if(tag.hasUUID("Owner")){ownerId=tag.getUUID("Owner");entityData.set(OWNER_ID,Optional.of(ownerId));}entityData.set(ACT_TWO,tag.getBoolean("ActTwo"));}}
  @Override public boolean isPushable(){return false;} @Override public boolean hurt(net.minecraft.world.damagesource.DamageSource source,float amount){return false;}
 }
