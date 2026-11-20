@@ -14,7 +14,7 @@ public class AbilityPacket {
    ServerPlayer player=context.getSender();
    if(player==null||!player.getPersistentData().getBoolean("standout_has_verity"))return;
    long now=player.level().getGameTime();
-   if(now<player.getPersistentData().getLong("standout_verity_atk_ready"))return;
+   if(now<player.getPersistentData().getLong("standout_verity_atk1_ready"))return;
    List<VerityStandEntity> stands=player.level().getEntitiesOfClass(VerityStandEntity.class,new AABB(player.blockPosition()).inflate(32.0D),s->player.getUUID().equals(s.getOwnerId()));
    if(stands.isEmpty())return;
    Vec3 look=player.getLookAngle().normalize();
@@ -24,11 +24,9 @@ public class AbilityPacket {
     if(toward.lengthSqr()>144.0D||toward.lengthSqr()<0.001D)continue;
     if(look.dot(toward.normalize())<0.45D)continue;
     Vec3 pull=player.position().add(0.0D,0.55D,0.0D).subtract(target.position()).normalize();
-    target.setDeltaMovement(target.getDeltaMovement().add(pull.scale(1.15D)).add(0.0D,0.16D,0.0D));
-    target.hurtMarked=true;
+    target.setDeltaMovement(target.getDeltaMovement().add(pull.scale(1.15D)).add(0.0D,0.16D,0.0D));target.hurtMarked=true;
    }
-   stands.get(0).startAttack();
-   player.getPersistentData().putLong("standout_verity_atk_ready",now+200L);
+   stands.get(0).startAttack();player.getPersistentData().putLong("standout_verity_atk1_ready",now+200L);
   });
   context.setPacketHandled(true);
  }
