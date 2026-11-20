@@ -19,12 +19,15 @@ public class AbilityTwoPacket {
    if(stands.isEmpty())return;
    VerityStandEntity stand=stands.get(0);stand.startAttackTwo();
    Vec3 look=player.getLookAngle().normalize();
+   Vec3 right=new Vec3(-look.z,0.0D,look.x).normalize();
    Vec3 origin=player.position().add(0.0D,1.0D,0.0D).add(look.scale(1.6D));
-   double[] offsets={-0.075D,-0.025D,0.025D,0.075D};
-   for(double offset:offsets){
-    Vec3 direction=new Vec3(look.x+(-look.z*offset),look.y,look.z+(look.x*offset)).normalize();
+   double[] lanes={-0.27D,-0.09D,0.09D,0.27D};
+   double[] spreads={-0.20D,-0.07D,0.07D,0.20D};
+   for(int i=0;i<4;i++){
+    Vec3 spawn=origin.add(right.scale(lanes[i]));
+    Vec3 direction=look.add(right.scale(spreads[i])).normalize();
     TearProjectile tear=new TearProjectile(player.level(),player);
-    tear.setPos(origin.x,origin.y,origin.z);
+    tear.setPos(spawn.x,spawn.y,spawn.z);
     tear.shoot(direction.x,direction.y,direction.z,1.85F,0.0F);
     player.level().addFreshEntity(tear);
    }
