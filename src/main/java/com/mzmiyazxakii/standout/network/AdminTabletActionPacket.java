@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import java.util.List;
 import java.util.function.Supplier;
 public class AdminTabletActionPacket {
@@ -29,6 +30,7 @@ public class AdminTabletActionPacket {
      target.getPersistentData().putLong("standout_verity_atk1_ready",0L);
      target.getPersistentData().putLong("standout_verity_atk_ready",0L);
      target.getPersistentData().putLong("standout_verity_atk2_ready",0L);
+     ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(()->target),new ResetCooldownsPacket());
      notify(sender,target,"Откаты сброшены");
     }
     case "remove_stand" -> {
