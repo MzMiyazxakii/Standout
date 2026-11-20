@@ -20,7 +20,7 @@ public class SummonStandPacket {
     if(stand!=null){
      stand.setOwner(player);stand.moveTo(player.getX(),player.getY()+1.0D,player.getZ(),player.getYRot(),0.0F);player.level().addFreshEntity(stand);
      player.getPersistentData().putLong("standout_verity_aura_until",player.level().getGameTime()+35L);
-     player.level().playSound(null,player.blockPosition(),ModSounds.VERITY_SUMMON.get(),SoundSource.PLAYERS,1.0F,1.0F);
+     player.playNotifySound(ModSounds.VERITY_SUMMON.get(),SoundSource.PLAYERS,1.0F,1.0F);
     }
    }
   });
