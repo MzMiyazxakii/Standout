@@ -12,6 +12,8 @@ public class VerityStandRenderer extends MobRenderer<VerityStandEntity,EntityMod
  private static final ResourceLocation ACT1_ATTACK=new ResourceLocation(StandoutMod.MOD_ID,"textures/entity/verity_act1_atk1.png");
  private static final ResourceLocation ACT1_ATTACK_TWO=new ResourceLocation(StandoutMod.MOD_ID,"textures/entity/verity_act1_atk2.png");
  private static final ResourceLocation ACT2_TEXTURE=new ResourceLocation(StandoutMod.MOD_ID,"textures/entity/verity_act2_smile.png");
+ private static final ResourceLocation ACT2_RAGE=new ResourceLocation(StandoutMod.MOD_ID,"textures/entity/verity_act2_rage.png");
+ private static final ResourceLocation ACT2_SPELL=new ResourceLocation(StandoutMod.MOD_ID,"textures/entity/verity_act2_spell.png");
  private final VerityAct1Model act1;
  private final VerityAct2Model act2;
  public VerityStandRenderer(EntityRendererProvider.Context context){
@@ -20,7 +22,7 @@ public class VerityStandRenderer extends MobRenderer<VerityStandEntity,EntityMod
   this.act2=new VerityAct2Model(context.bakeLayer(VerityAct2Model.LAYER_LOCATION));
  }
  @Override public ResourceLocation getTextureLocation(VerityStandEntity entity){
-  if(entity.isActTwo())return ACT2_TEXTURE;
+  if(entity.isActTwo())return entity.isAttacking()?(entity.isSecondAttacking()?ACT2_SPELL:ACT2_RAGE):ACT2_TEXTURE;
   return entity.isSecondAttacking()?ACT1_ATTACK_TWO:(entity.isAttacking()?ACT1_ATTACK:ACT1_TEXTURE);
  }
  @Override public void render(VerityStandEntity entity,float yaw,float partialTick,com.mojang.blaze3d.vertex.PoseStack poseStack,net.minecraft.client.renderer.MultiBufferSource buffer,int packedLight){
