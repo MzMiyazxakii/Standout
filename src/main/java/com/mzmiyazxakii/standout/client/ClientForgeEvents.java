@@ -1,4 +1,5 @@
 package com.mzmiyazxakii.standout.client;
+import com.mzmiyazxakii.standout.entity.VerityStandEntity;
 import com.mzmiyazxakii.standout.network.AbilityPacket;
 import com.mzmiyazxakii.standout.network.AbilityTwoPacket;
 import com.mzmiyazxakii.standout.network.ModNetwork;
@@ -30,21 +31,25 @@ public class ClientForgeEvents {
    Minecraft mc=Minecraft.getInstance();
    if(mc.player==null||mc.level==null){abilityOneReadyAt=0L;abilityTwoReadyAt=0L;return;}
    if(SUMMON_KEY!=null)while(SUMMON_KEY.consumeClick())ModNetwork.CHANNEL.sendToServer(new SummonStandPacket());
+   boolean hasVisibleStand=!mc.level.getEntitiesOfClass(VerityStandEntity.class,mc.player.getBoundingBox().inflate(40.0D),s->mc.player.getUUID().equals(s.getOwnerId())).isEmpty();
    if(ABILITY_KEY!=null)while(ABILITY_KEY.consumeClick()){
-    if(mc.level.getGameTime()>=abilityOneReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityPacket());abilityOneReadyAt=mc.level.getGameTime()+200L;}
+    if(hasVisibleStand&&mc.level.getGameTime()>=abilityOneReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityPacket());abilityOneReadyAt=mc.level.getGameTime()+200L;}
    }
    if(ABILITY_TWO_KEY!=null)while(ABILITY_TWO_KEY.consumeClick()){
-    if(mc.level.getGameTime()>=abilityTwoReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityTwoPacket());abilityTwoReadyAt=mc.level.getGameTime()+300L;}
+    if(hasVisibleStand&&mc.level.getGameTime()>=abilityTwoReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityTwoPacket());abilityTwoReadyAt=mc.level.getGameTime()+300L;}
    }
   }
   @SubscribeEvent public static void drawCooldowns(RenderGuiOverlayEvent.Post event){
    Minecraft mc=Minecraft.getInstance();if(mc.player==null||mc.level==null)return;
-   long now=mc.level.getGameTime();String first=remaining(now,abilityOneReadyAt),second=remaining(now,abilityTwoReadyAt);
+   long now=mc.level.getGameTime();boolean showFirst=abilityOneReadyAt>now,showSecond=abilityTwoReadyAt>now;
+   if(!showFirst&&!showSecond)return;
+   String first=remaining(now,abilityOneReadyAt),second=remaining(now,abilityTwoReadyAt);
    var font=mc.font;var gui=event.getGuiGraphics();
-   int x=event.getWindow().getGuiScaledWidth()-Math.max(font.width("Z: "+first),font.width("X: "+second))-8;
-   int y=event.getWindow().getGuiScaledHeight()-font.lineHeight*2-8;
-   gui.drawString(font,Component.literal("Z: "+first),x,y,0xFFFFFF,true);
-   gui.drawString(font,Component.literal("X: "+second),x,y+font.lineHeight,0xFFFFFF,true);
+   int width=Math.max(showFirst?font.width("Z: "+first):0,showSecond?font.width("X: "+second):0);
+   int x=event.getWindow().getGuiScaledWidth()-width-8;
+   int y=event.getWindow().getGuiScaledHeight()-font.lineHeight*((showFirst?1:0)+(showSecond?1:0))-8;
+   if(showFirst){gui.drawString(font,Component.literal("Z: "+first),x,y,0xFFFFFF,true);y+=font.lineHeight;}
+   if(showSecond)gui.drawString(font,Component.literal("X: "+second),x,y,0xFFFFFF,true);
   }
   private static String remaining(long now,long until){if(until<=now)return "Готово";return String.format(java.util.Locale.ROOT,"%.1fс",(until-now)/20.0D);}
  }
