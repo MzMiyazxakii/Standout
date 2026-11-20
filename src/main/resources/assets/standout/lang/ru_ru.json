@@ -1,11 +1,19 @@
 {
  "item.standout.mysterious_arrow":"Загадочная Стрела",
  "item.standout.rokaka":"Фрукт Рокака",
+ "item.standout.admin_tablet":"Планшет администратора",
  "key.standout.summon":"Призвать / Скрыть стенд",
  "key.standout.verity_ability":"Объятия",
- "key.standout.verity_ability_two":"Дружеские слезы",
+ "key.standout.verity_ability_two":"Дружеские слёзы",
  "key.categories.standout":"StandOut",
  "message.standout.verity_obtained":"Вы получили Верити!",
  "message.standout.rokaka_used":"Стенд удалён.",
- "message.standout.no_stand":"У вас нет стенда."
+ "message.standout.no_stand":"У вас нет стенда.",
+ "gui.standout.tablet.title":"Планшет администратора",
+ "gui.standout.tablet.target":"Ник игрока",
+ "gui.standout.tablet.give":"Выдать Верити",
+ "gui.standout.tablet.arrow":"Выдать стрелу",
+ "gui.standout.tablet.reset":"Сбросить откаты",
+ "gui.standout.tablet.remove":"Убрать стенд",
+ "gui.standout.tablet.denied":"Планшет доступен только операторам сервера."
 }
