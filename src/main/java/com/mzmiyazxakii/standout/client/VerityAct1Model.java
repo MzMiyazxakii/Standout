@@ -23,6 +23,6 @@ public class VerityAct1Model extends HierarchicalModel<VerityStandEntity> {
   root.getAllParts().forEach(ModelPart::resetPose);
   animate(entity.summonAnimationState,VerityAct1Animation.SUMMON,ageInTicks);
   animate(entity.idleAnimationState,VerityAct1Animation.IDLE,ageInTicks);
-  animate(entity.attackAnimationState,VerityAct1Animation.ATK,ageInTicks);
+  animate(entity.attackAnimationState,entity.isSecondAttacking()?VerityAct1Animation.ATK2:VerityAct1Animation.ATK,ageInTicks);
  }
 }
