@@ -1,4 +1,4 @@
 {
  "parent":"minecraft:item/generated",
- "textures":{"layer0":"standout:item/stand_arrow"}
+ "textures":{"layer0":"standout:item/admin_tablet"}
 }
