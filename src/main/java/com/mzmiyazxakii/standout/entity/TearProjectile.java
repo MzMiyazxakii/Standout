@@ -8,8 +8,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 public class TearProjectile extends ThrowableItemProjectile {
- public TearProjectile(EntityType<? extends TearProjectile> type,Level level){super(type,level);}
- public TearProjectile(Level level,LivingEntity owner){super(ModEntities.TEAR_PROJECTILE.get(),owner,level);}
+ public TearProjectile(EntityType<? extends TearProjectile> type,Level level){super(type,level);setNoGravity(true);}
+ public TearProjectile(Level level,LivingEntity owner){super(ModEntities.TEAR_PROJECTILE.get(),owner,level);setNoGravity(true);}
  @Override protected Item getDefaultItem(){return ModItems.TEAR.get();}
  @Override protected void onHitEntity(EntityHitResult result){
   super.onHitEntity(result);
