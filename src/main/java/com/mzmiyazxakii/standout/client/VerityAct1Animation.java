@@ -21,4 +21,10 @@ public class VerityAct1Animation {
    new Keyframe(0.0F,KeyframeAnimations.scaleVec(1.0F,1.0F,1.0F),AnimationChannel.Interpolations.LINEAR),
    new Keyframe(0.9583F,KeyframeAnimations.scaleVec(1.1F,1.1F,1.0F),AnimationChannel.Interpolations.CATMULLROM),
    new Keyframe(1.5F,KeyframeAnimations.scaleVec(1.2F,1.2F,1.1F),AnimationChannel.Interpolations.CATMULLROM))).build();
+ public static final AnimationDefinition ATK2=AnimationDefinition.Builder.withLength(2.0F)
+  .addAnimation("Verity",new AnimationChannel(AnimationChannel.Targets.POSITION,
+   new Keyframe(0.0F,KeyframeAnimations.posVec(0.0F,0.0F,0.0F),AnimationChannel.Interpolations.LINEAR),
+   new Keyframe(0.45F,KeyframeAnimations.posVec(0.0F,0.0F,-4.0F),AnimationChannel.Interpolations.CATMULLROM),
+   new Keyframe(1.5F,KeyframeAnimations.posVec(0.0F,0.0F,-4.0F),AnimationChannel.Interpolations.LINEAR),
+   new Keyframe(2.0F,KeyframeAnimations.posVec(0.0F,0.0F,0.0F),AnimationChannel.Interpolations.CATMULLROM))).build();
 }
