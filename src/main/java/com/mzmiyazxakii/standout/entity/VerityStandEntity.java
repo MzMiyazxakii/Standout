@@ -56,7 +56,7 @@ public class VerityStandEntity extends Mob {
    }
    if(isSecondAttacking()&&secondTearsFired<4&&attackTicks<=nextSecondTearTick){
     Vec3 look=owner.getLookAngle().normalize();Vec3 origin=position().add(0.0D,0.15D,0.0D).add(look.scale(0.62D));
-    TearProjectile tear=new TearProjectile(level(),owner);tear.setPos(origin.x,origin.y,origin.z);tear.shoot(look.x,look.y,look.z,0.62F,0.0F);level().addFreshEntity(tear);
+    TearProjectile tear=new TearProjectile(level(),owner);tear.setPos(origin.x,origin.y,origin.z);tear.shoot(look.x,look.y,look.z,1.8F,0.0F);tear.setDeltaMovement(look.scale(1.8D));tear.setNoGravity(true);level().addFreshEntity(tear);
     secondTearsFired++;nextSecondTearTick-=5;
    }
   }
