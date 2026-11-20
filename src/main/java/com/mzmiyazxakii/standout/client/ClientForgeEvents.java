@@ -1,5 +1,4 @@
 package com.mzmiyazxakii.standout.client;
-import com.mzmiyazxakii.standout.entity.VerityStandEntity;
 import com.mzmiyazxakii.standout.network.AbilityPacket;
 import com.mzmiyazxakii.standout.network.AbilityTwoPacket;
 import com.mzmiyazxakii.standout.network.ModNetwork;
@@ -31,12 +30,11 @@ public class ClientForgeEvents {
    Minecraft mc=Minecraft.getInstance();
    if(mc.player==null||mc.level==null){abilityOneReadyAt=0L;abilityTwoReadyAt=0L;return;}
    if(SUMMON_KEY!=null)while(SUMMON_KEY.consumeClick())ModNetwork.CHANNEL.sendToServer(new SummonStandPacket());
-   boolean hasStand=!mc.level.getEntitiesOfClass(VerityStandEntity.class,mc.player.getBoundingBox().inflate(40.0D),s->mc.player.getUUID().equals(s.getOwnerId())).isEmpty();
    if(ABILITY_KEY!=null)while(ABILITY_KEY.consumeClick()){
-    if(hasStand&&mc.level.getGameTime()>=abilityOneReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityPacket());abilityOneReadyAt=mc.level.getGameTime()+200L;}
+    if(mc.level.getGameTime()>=abilityOneReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityPacket());abilityOneReadyAt=mc.level.getGameTime()+200L;}
    }
    if(ABILITY_TWO_KEY!=null)while(ABILITY_TWO_KEY.consumeClick()){
-    if(hasStand&&mc.level.getGameTime()>=abilityTwoReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityTwoPacket());abilityTwoReadyAt=mc.level.getGameTime()+300L;}
+    if(mc.level.getGameTime()>=abilityTwoReadyAt){ModNetwork.CHANNEL.sendToServer(new AbilityTwoPacket());abilityTwoReadyAt=mc.level.getGameTime()+300L;}
    }
   }
   @SubscribeEvent public static void drawCooldowns(RenderGuiOverlayEvent.Post event){
