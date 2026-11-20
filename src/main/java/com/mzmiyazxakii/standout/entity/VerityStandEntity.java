@@ -24,7 +24,7 @@ public class VerityStandEntity extends Mob {
  private UUID ownerId; private int attackTicks;
  public final AnimationState summonAnimationState=new AnimationState(),idleAnimationState=new AnimationState(),attackAnimationState=new AnimationState();
  private boolean animationInitialized; private int secondTearsFired,nextSecondTearTick;
- public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);}
+ public VerityStandEntity(EntityType<? extends Mob> type,Level level){super(type,level);setNoGravity(true);setNoAi(true);setNoPhysics(true);}
  public static AttributeSupplier.Builder createAttributes(){return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,20.0D);}
  @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ATTACKING,false);entityData.define(ATTACKING_TWO,false);entityData.define(ACT_TWO,false);entityData.define(OWNER_ID,Optional.empty());}
  public void setOwner(Player player){ownerId=player.getUUID();entityData.set(OWNER_ID,Optional.of(ownerId));}
