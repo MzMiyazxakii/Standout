@@ -1,6 +1,10 @@
 {
  "item.standout.mysterious_arrow":"Mysterious Arrow",
+ "item.standout.rokaka":"Rokaka Fruit",
  "key.standout.summon":"Summon / Hide Stand",
+ "key.standout.verity_ability":"Verity: Pull",
  "key.categories.standout":"StandOut",
- "message.standout.verity_obtained":"You obtained Verity!"
+ "message.standout.verity_obtained":"You obtained Verity!",
+ "message.standout.rokaka_used":"The stand has been removed.",
+ "message.standout.no_stand":"You do not own a stand."
 }
